@@ -1,0 +1,26 @@
+name: Deploy QA
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Deploy QA
+        run: |
+          rm -rf /var/www/qa/*
+          cp -R dist/angular-cicd-demo/browser/* /var/www/qa/
